@@ -3,7 +3,7 @@ angular.module('dashboard.services', [])
 	return {
 		get: function () {
 			return $http.get('http://hackday-lemann.herokuapp.com/schools/')
-		}
+		},
 	};
 })
 .service('Quesitos', function ($http, $q){
@@ -13,33 +13,33 @@ angular.module('dashboard.services', [])
 	var quesitos = [];
 
 	quesitos.push({
-		id: 'exerciseminutes',
+		id: 'exerciseMinutes',
 		label: 'Tempo de exercício',
 		enabled: false
 	});
 
 
 	quesitos.push({
-		id: 'videominutes',
+		id: 'videoMinutes',
 		label: 'Tempo de vídeo assistido',
-		enabled: false
+		enabled: true
 	});
 
 	
 	quesitos.push({
-		id: 'totalminutes',
+		id: 'totalMinutes',
 		label: 'Tempo na plataforma',
 		enabled: false
 	});
 
 	quesitos.push({
-		id: 'com_dificuldade',
+		id: 'comDificuldade',
 		label: 'Com dificuldades',
 		enabled: false
 	});
 
 	quesitos.push({
-		id: 'precisa_praticar',
+		id: 'precisaPraticar',
 		label: 'Precisa praticar',
 		enabled: false
 	});
@@ -65,7 +65,7 @@ angular.module('dashboard.services', [])
 	quesitos.push({
 		id: 'dominado',
 		label: 'Dominado',
-		enabled: false
+		enabled: true
 	});
 
 	quesitos.push({
@@ -92,10 +92,20 @@ angular.module('dashboard.services', [])
 	}
 
 })
-.service('WeeklyReports', function ($http) {
+.service('WeeklyReports', function ($http, _) {
 	return {
-		get: function () {
-			return $http.get('http://hackday-lemann.herokuapp.com/schools/123/weeklyReport')
+		get: function (options) {
+			return $http.get('http://hackday-lemann.herokuapp.com/schools/' + options.escola + '/weeklyReport')
+				.then(function (res) {
+
+					// parse the date
+					_.each(res.data, function (d, index) {
+
+						res.data[index].date = new Date(d._id);
+					});
+
+					return res;
+				})
 		}
 	}
 })
