@@ -4,7 +4,10 @@ angular.module('dashboard.services', [])
 		get: function () {
 
 
-			return $http.get('/fake-api/escolas.json')
+			return $http.get('http://hackday-lemann.herokuapp.com/schools/')
 		}
 	};
-});
+})
+.service('WeeklyReport', function ($http) {
+	
+})
