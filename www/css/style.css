@@ -6,6 +6,11 @@ path {
 	fill: none;
 }
 
+path.area {
+	fill: purple;
+	fill-opacity: 0.7;
+}
+
 path.videoMinutes {
 	stroke: steelblue;
 }

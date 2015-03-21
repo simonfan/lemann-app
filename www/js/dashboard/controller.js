@@ -1,37 +1,7 @@
 angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 .controller('DashboardCtrl', function ($scope, $stateParams, Escolas, WeeklyReports, Quesitos, _) {
 
-
-
-	// D3 settings
-
-	var height = 300, width = 500;
-
-	// build d3 paths
-	var chart = d3
-	  .select('#chart')
-	  .append('svg')
-	  .attr('width', width)
-	  .attr('height', height)
-	  .append('g');
-
-	var chartPaths = {
-		totalMinutes: chart.append('path'),
-		videoMinutes: chart.append('path').attr('class', 'videoMinutes'),
-		exerciseMinutes: chart.append('path').attr('class', 'exerciseMinutes'),
-		pontos: chart.append('path'),
-		dominado: chart.append('path'),
-		nivel2: chart.append('path'),
-		nivel1: chart.append('path'),
-		praticado: chart.append('path'),
-		precisaPraticar: chart.append('path'),
-		comDificuldade: chart.append('path'),
-	};
-
-
-	// define control objetc
-	var control = $scope.control = {};
-
+	// load basic data
 	// Quesitos
 	Quesitos.get()
 		.then(function (res) {
@@ -59,6 +29,39 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 		});
 
 
+
+
+	/////////////////
+	// D3 settings //
+	/////////////////
+	var height = 300, width = 500;
+
+	// build d3 paths
+	var chart = d3
+	  .select('#chart')
+	  .append('svg')
+	  .attr('width', width)
+	  .attr('height', height)
+	  .append('g');
+
+
+	var chartPaths = {
+		pontos: chart.append('path'),
+	};
+
+	// define control objetc
+	var control = $scope.control = {};
+
+
+	// function to check whether a graph is required
+	function isQuesitoRequired(id) {
+		return _.find(control.quesitos, function (q) {
+			return q.id === id && q.enabled;
+		})
+	}
+
+
+
 	// watch changes on escola property of the control object
 	$scope.$watch('control.escola', function () {
 
@@ -74,48 +77,147 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 
 				// 
 				drawAllRequiredGraphs();
-				
 			})
 		}
 		
 	});
 
-
+	// draws all required graphs
 	function drawAllRequiredGraphs() {
 
-		// draw one graph for each.
-		_.each(control.quesitos, function (q) {
+		if ($scope.weeklyReportData) {
 
-			if (chartPaths[q.id]) {
+			// draw time graphs
+			drawTimeGraphs();
+
+			// draw exercise graphs
+			drawExerciseGraphs();
+		}
+	}
+
+	var timeChartPaths = {
+		totalMinutes: chart.append('path').attr('class', 'totalMinutes'),
+		videoMinutes: chart.append('path').attr('class', 'videoMinutes'),
+		exerciseMinutes: chart.append('path').attr('class', 'exerciseMinutes'),
+	};
+
+	// draws graphs related to time
+	function drawTimeGraphs() {
+
+		var weeks = $scope.weeklyReportData;
+
+		var dataType = $scope.dataType || 'avg';
+
+		// build time graph scale 
+		var scale = d3.scale.linear()
+			.domain(d3.extent(weeks, function (week) {
+				return week[dataType].totalMinutes;
+			}))
+			.range([height, 0]);
 
 
-				if (q.enabled) {
-					
+		_.each(timeChartPaths, function (path, id) {
+			if (isQuesitoRequired(id)) {
+				// show
+				timeChartPaths[id].attr('visibility', 'visible');
 
-					chartPaths[q.id].attr('visibility', 'visible')
-					drawGraph(chartPaths[q.id], $scope.weeklyReportData, {
-						attribute: q.id
-					});
+				// draw
+				drawLineGraph(path, weeks, {
+					attribute: id,
+					yScale: scale
+				})
 
-				} else {
-
-					chartPaths[q.id].attr('visibility', 'hidden')
-				}
-
+			} else {
+				timeChartPaths[id].attr('visibility', 'hidden');
 			}
-
 		})
 	}
 
+	var exerciseChartPaths = {
+		dominado: chart.append('path').attr('class', 'dominado area'),
+		nivel2: chart.append('path').attr('class', 'nivel2 area'),
+		nivel1: chart.append('path').attr('class', 'nivel1 area'),
+		praticado: chart.append('path').attr('class', 'praticado area'),
+		precisaPraticar: chart.append('path').attr('class', 'precisaPraticar area'),
+		comDificuldade: chart.append('path').attr('class', 'comDificuldade area'),
+	}
 
-	// function that generates graph
-	function drawGraph(path, weeks, options) {
+	var exerciseLevels = ['comDificuldade', 'precisaPraticar', 'praticado', 'nivel1', 'nivel2', 'dominado'];
+	// 
+	function drawExerciseGraphs() {
+
+		var weeks = $scope.weeklyReportData;
+
+		var dataType = $scope.dataType || 'avg';
+
+		// get all exerciseLevelCount
+		var exerciseCounts = []
+		_.each(weeks, function (week) {
+
+			var weekCounts = [];
+
+			_.each(exerciseLevels, function (attr) {
+				console.log(week)
+
+				exerciseCounts.push(week[dataType][attr]);
+			});
+		});
+
+
+		// get domain
+		var min = _.min(exerciseCounts);
+
+		var max = 0;
+		_.each(weeks, function (week) {
+
+			// calculate the total exercise count of the week
+			var weekTotal = _.reduce(exerciseLevels, function (res, level) {
+				return res + week[dataType][level];
+			}, 0);
+
+			// if weekTotal is higher than the current max...
+			max = weekTotal > max ? weekTotal : max;
+		});
+
+		// build time graph scale 
+		var scale = d3.scale.linear()
+			.domain([min, max])
+			.range([height, 0]);
+
+
+		_.each(exerciseChartPaths, function (path, id) {
+			if (isQuesitoRequired(id)) {
+				// show
+				exerciseChartPaths[id].attr('visibility', 'visible');
+
+				var previousLevel = exerciseLevels[_.indexOf(exerciseLevels, id) - 1];
+
+				// draw
+				drawAreaGraph(path, weeks, {
+					attribute: id,
+					bottomAttribute: previousLevel,
+					yScale: scale
+				})
+
+			} else {
+				exerciseChartPaths[id].attr('visibility', 'hidden');
+			}
+		})
+	}
+
+	// function that generates a single graph
+	function drawLineGraph(path, weeks, options) {
 
 		var dataType      = options.type || 'avg',
-			dataAttribute = options.attribute;
+			dataAttribute = options.attribute,
+			yScale        = options.yScale;
 
 		if (!dataAttribute) {
 			throw new Error('No dataAttribute');
+		}
+
+		if (!yScale) {
+			throw new Error('No yScale');
 		}
 
 		// create a time scale
@@ -126,21 +228,14 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 			}))
 			.range([0, width]);
 
-
-		// video minute scale
-		var videoMinScale = d3.scale.linear()
-			.domain(d3.extent(weeks, function (week) {
-				return week[dataType][dataAttribute]
-			}))
-			.range([height, 0]);
-
+		// yScale must be passed in
 
 		var line = d3.svg.line()
 		      .x(function (week) {
 		        return xScale(week.date);
 		      })
 		      .y(function (week) {
-		        return videoMinScale(week[dataType][dataAttribute]);
+		        return yScale(week[dataType][dataAttribute]);
 		      });
 
 		// set data to path
@@ -151,6 +246,55 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 		  .attr('d', line);
 	}
 
+
+
+	function drawAreaGraph(path, weeks, options) {
+
+		var dataType        = options.type || 'avg',
+			dataAttribute   = options.attribute,
+			bottomAttribute = options.bottomAttribute,
+			yScale          = options.yScale;
+
+		if (!dataAttribute) {
+			throw new Error('No dataAttribute');
+		}
+
+		if (!bottomAttribute) {
+			console.warn('No bottomAttribute')
+		}
+
+		if (!yScale) {
+			throw new Error('No yScale');
+		}
+
+		// create a time scale
+		//retrieve dates
+		var xScale = d3.time.scale()
+			.domain(d3.extent(weeks, function (week) {
+				return week.date;
+			}))
+			.range([0, width]);
+
+		// yScale must be passed in
+
+		var area = d3.svg.area()
+		      .x(function (week) {
+		        return xScale(week.date);
+		      })
+		      .y0(function (week) {
+		      	return bottomAttribute ? yScale(week[dataType][bottomAttribute]) : yScale(0);
+		      })
+		      .y1(function (week) {
+		      	return yScale(week[dataType][dataAttribute]);
+		      })
+
+		// set data to path
+		path
+		  .datum(weeks)
+		  .transition()
+		  .duration(450)
+		  .attr('d', area);	
+	}
 
 
 

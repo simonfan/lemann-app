@@ -12,18 +12,6 @@ angular.module('dashboard.services', [])
 	// control description
 	var quesitos = [];
 
-	quesitos.push({
-		id: 'exerciseMinutes',
-		label: 'Tempo de exercício',
-		enabled: false
-	});
-
-
-	quesitos.push({
-		id: 'videoMinutes',
-		label: 'Tempo de vídeo assistido',
-		enabled: true
-	});
 
 	
 	quesitos.push({
@@ -31,6 +19,18 @@ angular.module('dashboard.services', [])
 		label: 'Tempo na plataforma',
 		enabled: false
 	});
+	quesitos.push({
+		id: 'exerciseMinutes',
+		label: 'Tempo de exercício',
+		enabled: false
+	});
+
+
+	// quesitos.push({
+	// 	id: 'videoMinutes',
+	// 	label: 'Tempo de vídeo assistido',
+	// 	enabled: true
+	// });
 
 	quesitos.push({
 		id: 'comDificuldade',
