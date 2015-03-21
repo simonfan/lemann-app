@@ -2,23 +2,32 @@
   <ion-content>
     <h1>Dashboard</h1>
 
+   
+
+    <label class="item item-input item-select">
+            <div class="input-label">
+                Escolha a escola:
+            </div>
+            <select ng-model="control.escola" class="item-select">
+                <option ng-repeat="escola in escolas" value="{{ escola.id }}">
+                {{ escola.name }}
+                </option>
+
+            </select>
+    </label>
 
 
-    <div class="control">
+  <!--    <div class="item  item-input item-select">
+        <button ng-repeat="quesito in control.quesitos" ng-class="{ active: quesito.enabled }">
+            {{ quesito.label }}
+        </button>
+    </div> -->
 
-    	<select ng-model="control.escola">
-    	  <option ng-repeat="escola in escolas" value="{{ escola.id }}">
-    	  	{{ escola.name }}
-    	  </option>
-    	</select>
+    <label class="checkbox" ng-repeat="quesito in control.quesitos" ng-class="{ active: quesito.enabled }" >
+        <input type="checkbox">
+                {{ quesito.label }}
+    </label>
 
-    	<div>
-    		<button ng-repeat="quesito in control.quesitos">
-    			{{ quesito.label }}
-    		</button>
-    	</div>
-    </div>
-
-
+   
   </ion-content>
 </ion-view>
