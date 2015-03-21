@@ -39,6 +39,17 @@ angular.module('app', ['ionic', 'app.controllers'])
       }
     }
   })
+
+  .state('app.escolasProblema', {
+    url: "/escolas-problema",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/escolas-problema.html",
+        controller: 'EscolasProblemaCtrl'
+      }
+    }
+  })
+
   // .state('app.escolas', {
   //   url: "/escolas",
   //   views: {

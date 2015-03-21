@@ -1,0 +1,11 @@
+<ion-view view-title="Escolas com problemas de acesso">
+  <ion-content>
+    <ion-list>
+      <ion-item ng-show="escolas == null">Aguarde...</ion-item>
+      <ion-item ng-repeat="escola in escolas" href="#/app/dashboard/{{escola.school._id}}">
+        {{escola.school.name}}
+        <span style="color:red">({{escola.percentDiff | number : 2}}%)</span>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
