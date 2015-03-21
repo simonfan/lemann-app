@@ -1,4 +1,4 @@
-angular.module('app.controllers', ['dashboard.controller'])
+angular.module('app.controllers', ['dashboard.controller', 'escolasProblema.controller'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
   // Form data for the login modal

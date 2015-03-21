@@ -30,6 +30,16 @@ angular.module('app', ['ionic', 'app.controllers'])
     controller: 'AppCtrl'
   })
 
+  .state('app.dashboardWithSchool', {
+    url: "/dashboard/:schoolId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/dashboard.html",
+        controller: 'DashboardCtrl',
+      }
+    }
+  })
+
   .state('app.dashboard', {
     url: "/dashboard",
     views: {
@@ -39,6 +49,17 @@ angular.module('app', ['ionic', 'app.controllers'])
       }
     }
   })
+
+  .state('app.escolasProblema', {
+    url: "/escolas-problema",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/escolas-problema.html",
+        controller: 'EscolasProblemaCtrl'
+      }
+    }
+  })
+
   // .state('app.escolas', {
   //   url: "/escolas",
   //   views: {
