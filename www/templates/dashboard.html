@@ -2,9 +2,10 @@
   <ion-content>
     <h1>Desempenho médio das instituições de ensino</h1>
 
-   
-
-    <div class="row">
+    <div class="row" ng-show="escolas == null">
+      Aguarde...
+    </div>
+    <div class="row" ng-show="escolas">
 
         <label class="item item-input item-select col col-75">
                 <div class="input-label">
@@ -19,7 +20,7 @@
         </label>
     </div>
 
-    <div class="row">
+    <div class="row" ng-show="escolas">
 
         <label class="item item-input item-select col col-75">
                 <div class="input-label">
