@@ -25,7 +25,7 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 			$scope.escolas = res.data;
 
 			// set control value for escolaId
-			$scope.control.escola = _.first(res.data)._id
+			$scope.control.escola = $stateParams.schoolId || _.first(res.data)._id
 		});
 
 

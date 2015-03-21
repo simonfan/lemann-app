@@ -30,6 +30,16 @@ angular.module('app', ['ionic', 'app.controllers'])
     controller: 'AppCtrl'
   })
 
+  .state('app.dashboardWithSchool', {
+    url: "/dashboard/:schoolId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/dashboard.html",
+        controller: 'DashboardCtrl',
+      }
+    }
+  })
+
   .state('app.dashboard', {
     url: "/dashboard",
     views: {
