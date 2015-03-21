@@ -1,0 +1,16 @@
+<ion-view view-title="Dashboard">
+  <ion-content>
+    <h1>Dashboard</h1>
+
+
+    <select ng-model="control.escola">
+      <option ng-repeat="escola in escolas" value="{{ escola.id }}">
+      	{{ escola.name }}
+      </option>
+    </select>
+
+
+
+
+  </ion-content>
+</ion-view>
