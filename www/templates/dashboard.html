@@ -13,9 +13,11 @@
     	</select>
 
     	<div>
-    		<button ng-repeat="quesito in control.quesitos">
-    			{{ quesito.label }}
-    		</button>
+
+    		<label class="checkbox" ng-repeat="quesito in control.quesitos">
+    		  <input ng-model="quesito.enabled" type="checkbox">
+    		  {{ quesito.label }}
+    		</label>
     	</div>
     </div>
 
