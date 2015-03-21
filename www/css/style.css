@@ -1,18 +1,100 @@
 /* Empty. Add your own CSS if you like */
+h1{
+	color: #373837;
+}
+
 path {
 
 	stroke: gray;
-	stroke-width: 3px;
+	stroke-width: 4px;
 	fill: none;
 }
 
-path.videoMinutes {
-	stroke: steelblue;
+path.exerciseMinutes { stroke: #1b9947;}
+path.videoMinutes {	stroke: #6d36c6;}
+path.totalMinutes {stroke: #e046bf;}
+path.comDificuldade {stroke: #99ca3c;}
+path.pontos {stroke: #f08321;}
+path.dominado {stroke: #d81212;}
+path.nivel1 {stroke: #0db6cd;}
+path.nivel2 {stroke: #723f0c;}
+path.praticado {stroke: #001956;}
+path.precisaPraticar {stroke: #fce300;}
+
+
+.exerciseMinutes.checkbox input:checked:before, .exerciseMinutes.checkbox input:checked + .checkbox-icon:before {
+	background-color: #1b9947;
+	border-color: #1b9947;
 }
+
+.videoMinutes.checkbox input:checked:before, .videoMinutes.checkbox input:checked + .checkbox-icon:before {
+	background-color: #6d36c6;
+	border-color: #6d36c6;
+}
+
+.totalMinutes.checkbox input:checked:before, .totalMinutes.checkbox input:checked + .checkbox-icon:before {
+	background-color: #e046bf;
+	border-color: #e046bf;
+}
+
+.comDificuldade.checkbox input:checked:before, .comDificuldade.checkbox input:checked + .checkbox-icon:before {
+	background-color: #99ca3c;
+	border-color: #99ca3c;
+}
+
+.pontos.checkbox input:checked:before, .pontos.checkbox input:checked + .checkbox-icon:before {
+	background-color: #f08321;
+	border-color: #f08321;
+}
+
+.dominado.checkbox input:checked:before, .dominado.checkbox input:checked + .checkbox-icon:before {
+	background-color: #d81212;
+	border-color: #d81212;
+}
+
+.nivel1.checkbox input:checked:before, .nivel1.checkbox input:checked + .checkbox-icon:before {
+	background-color: #0db6cd;
+	border-color: #0db6cd;
+}
+
+.nivel2.checkbox input:checked:before, .nivel2.checkbox input:checked + .checkbox-icon:before {
+	background-color: #723f0c;
+	border-color: #723f0c;
+}
+
+.praticado.checkbox input:checked:before, .praticado.checkbox input:checked + .checkbox-icon:before {
+	background-color: #001956;
+	border-color: #001956;
+}
+
+.precisaPraticar.checkbox input:checked:before, .precisaPraticar.checkbox input:checked + .checkbox-icon:before {
+	background-color: #fce300;
+	border-color: #fce300;
+}
+
 
 #chart {
   width: 500px;
   height: 300px;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   margin-top: 10px;
+}
+
+.item{
+	border-width: 0;
+	font-weight: bold;
+}
+
+.item.item-input.item-select{
+	background-color: #efefef;
+	margin-bottom: 10px;
+}
+
+select.item-select{
+	background-color: #efefef;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	font-weight: bold;
+	text-transform: capitalize;
 }

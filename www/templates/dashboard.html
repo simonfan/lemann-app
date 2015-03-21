@@ -1,31 +1,61 @@
 <ion-view view-title="Dashboard">
   <ion-content>
-    <h1>Dashboard</h1>
+    <h1>Desempenho médio das instituições de ensino</h1>
 
    
 
-    <label class="item item-input item-select">
-            <div class="input-label">
-                Escolha a escola:
-            </div>
-            <select ng-model="control.escola" class="item-select">
-                <option ng-repeat="escola in escolas" value="{{ escola._id }}">
-                {{ escola.name }}
-                </option>
+    <div class="row">
 
-            </select>
-    </label>
+        <label class="item item-input item-select col col-75">
+                <div class="input-label">
+                    Escolha a instituição:
+                </div>
+                <select ng-model="control.escola" class="item-select">
+                    <option ng-repeat="escola in escolas" value="{{ escola._id }}">
+                    {{ escola.name }}
+                    </option>
+
+                </select>
+        </label>
     </div>
 
-    <label class="checkbox" ng-repeat="quesito in control.quesitos">
-        <input ng-model="quesito.enabled" type="checkbox">
-        {{ quesito.label }}
-    </label>
+    <div class="row">
 
+        <label class="item item-input item-select col col-75">
+                <div class="input-label">
+                    Escolha a turma:
+                </div>
+                <select ng-model="control.turma" class="item-select">
+                    <option ng-repeat="escola in escolas" value="{{ escola._id }}">
+                    {{ turma.name }}
+                    </option>
 
-    <div id="chart">
-
+                </select>
+        </label>
     </div>
+
+    <div class="row">
+
+        <div class="col col-75" id="chart">
+
+        </div>
+
+        <div class="col">
+
+            <ul class="list">
+
+                <li class="item item-checkbox" ng-repeat="quesito in control.quesitos">
+                    <label class="checkbox {{quesito.id }}">
+                        <input ng-model="quesito.enabled" type="checkbox">
+                    </label>
+                    {{ quesito.label }}
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+
 
    
   </ion-content>
