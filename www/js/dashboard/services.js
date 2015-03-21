@@ -95,7 +95,10 @@ angular.module('dashboard.services', [])
 .service('WeeklyReports', function ($http, _) {
 	return {
 		get: function (options) {
-			return $http.get('http://hackday-lemann.herokuapp.com/schools/' + options.escola + '/weeklyReport')
+
+			var turma = options.turma && options.turma !== '_all' ? options.turma : '';
+
+			return $http.get('http://hackday-lemann.herokuapp.com/schools/' + options.escola + '/weeklyReport?turma=' + turma)
 				.then(function (res) {
 
 					// parse the date

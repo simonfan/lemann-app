@@ -47,6 +47,7 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 
 	var chartPaths = {
 		pontos: chart.append('path'),
+		turma: '_all'
 	};
 
 	// define control objetc
@@ -61,14 +62,26 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 	}
 
 
-
-	// watch changes on escola property of the control object
-	$scope.$watch('control.escola', function () {
+	function updateGraph() {
 
 		if (control.escola) {
 
+			// find the escola
+			var escolaObj = _.find($scope.escolas, function (e) {
+				return e._id === control.escola;
+			});
+
+			var turmas = [{
+				_id: '_all',
+				name: 'Todas'
+			}];
+
+			// set the turmas at scope
+			$scope.turmas = turmas.concat(escolaObj.turmas);
+
 			WeeklyReports.get({
-				escola: control.escola
+				escola: control.escola,
+				turma: control.turma
 			})
 			.then(function (res) {
 
@@ -80,7 +93,11 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 			})
 		}
 		
-	});
+	}
+
+	// watch changes on escola property of the control object
+	$scope.$watch('control.escola', updateGraph);
+	$scope.$watch('control.turma', updateGraph);
 
 	// draws all required graphs
 	function drawAllRequiredGraphs() {
