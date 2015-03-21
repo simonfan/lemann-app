@@ -17,12 +17,14 @@ angular.module('dashboard.services', [])
 	quesitos.push({
 		id: 'totalMinutes',
 		label: 'Tempo na plataforma',
-		enabled: false
+		enabled: false,
+		type: 'time',
 	});
 	quesitos.push({
 		id: 'exerciseMinutes',
 		label: 'Tempo de exercício',
-		enabled: false
+		enabled: false,
+		type: 'time'
 	});
 
 
@@ -35,43 +37,50 @@ angular.module('dashboard.services', [])
 	quesitos.push({
 		id: 'comDificuldade',
 		label: 'Com dificuldades',
-		enabled: false
+		enabled: false,
+		type: 'exercise',
 	});
 
 	quesitos.push({
 		id: 'precisaPraticar',
 		label: 'Precisa praticar',
-		enabled: false
+		enabled: false,
+		type: 'exercise',
 	});
 	
 	quesitos.push({
 		id: 'praticado',
 		label: 'Praticado',
-		enabled: false
+		enabled: false,
+		type: 'exercise',
 	});
 	
 	quesitos.push({
 		id: 'nivel1',
 		label: 'Nivel 1',
-		enabled: false
+		enabled: false,
+		type: 'exercise',
 	});
 
 	quesitos.push({
 		id: 'nivel2',
 		label: 'Nivel 2',
-		enabled: false
+		enabled: false,
+		type: 'exercise',
 	});
 
 	quesitos.push({
 		id: 'dominado',
 		label: 'Dominado',
-		enabled: true
+		enabled: true,
+		type: 'exercise',
 	});
 
 	quesitos.push({
 		id: 'pontos',
 		label: 'Pontos',
-		enabled: false
+		enabled: false,
+		type: 'exercise',
 	});
 
 
@@ -111,4 +120,4 @@ angular.module('dashboard.services', [])
 				})
 		}
 	}
-})
+});

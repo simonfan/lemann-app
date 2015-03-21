@@ -34,7 +34,7 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 	/////////////////
 	// D3 settings //
 	/////////////////
-	var height = 300, width = 500;
+	var height = 300, width = 700;
 
 	// build d3 paths
 	var chart = d3
@@ -50,8 +50,16 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 		turma: '_all'
 	};
 
+
+	$scope.turmas = [{
+		_id: '_all',
+		name: 'Todas'
+	}];
+
 	// define control objetc
-	var control = $scope.control = {};
+	var control = $scope.control = {
+		turma: '_all'
+	};
 
 
 	// function to check whether a graph is required
@@ -201,18 +209,39 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 			.domain([min, max])
 			.range([height, 0]);
 
+		// build list of required exercise levels'
+		var requiredExerciseLevels = _.filter(control.quesitos, function (q) {
+				return q.type === 'exercise' && q.enabled;
+			}),
+			requiredExerciseLevelNames = _.map(requiredExerciseLevels, function (q) {
+				return q.id; 
+			});
+
 
 		_.each(exerciseChartPaths, function (path, id) {
 			if (isQuesitoRequired(id)) {
 				// show
 				exerciseChartPaths[id].attr('visibility', 'visible');
 
-				var previousLevel = exerciseLevels[_.indexOf(exerciseLevels, id) - 1];
+				var currentLevelIndex = _.indexOf(requiredExerciseLevelNames, id);
+
+				// parse the polygons data
+				var weeksData = _.map(weeks, function (wk) {
+
+					return {
+						date: wk.date,
+						y0: 0,
+						y1: _.reduce(requiredExerciseLevelNames, function (res, level, levelIndex) {
+							return levelIndex <= currentLevelIndex ? res + wk[dataType][level] : res;
+						}, 0),
+					};
+
+				});
+
+				console.log(weeksData);
 
 				// draw
-				drawAreaGraph(path, weeks, {
-					attribute: id,
-					bottomAttribute: previousLevel,
+				drawAreaGraph(path, weeksData, {
 					yScale: scale
 				})
 
@@ -265,21 +294,9 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 
 
 
-	function drawAreaGraph(path, weeks, options) {
+	function drawAreaGraph(path, weeksData, options) {
 
-		var dataType        = options.type || 'avg',
-			dataAttribute   = options.attribute,
-			bottomAttribute = options.bottomAttribute,
-			yScale          = options.yScale;
-
-		if (!dataAttribute) {
-			throw new Error('No dataAttribute');
-		}
-
-		if (!bottomAttribute) {
-			console.warn('No bottomAttribute')
-		}
-
+		var yScale = options.yScale;
 		if (!yScale) {
 			throw new Error('No yScale');
 		}
@@ -287,27 +304,27 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 		// create a time scale
 		//retrieve dates
 		var xScale = d3.time.scale()
-			.domain(d3.extent(weeks, function (week) {
-				return week.date;
+			.domain(d3.extent(weeksData, function (wk) {
+				return wk.date;
 			}))
 			.range([0, width]);
 
 		// yScale must be passed in
 
 		var area = d3.svg.area()
-		      .x(function (week) {
-		        return xScale(week.date);
+		      .x(function (wk) {
+		        return xScale(wk.date);
 		      })
-		      .y0(function (week) {
-		      	return bottomAttribute ? yScale(week[dataType][bottomAttribute]) : yScale(0);
+		      .y0(function (wk) {
+		      	return yScale(wk.y0);
 		      })
-		      .y1(function (week) {
-		      	return yScale(week[dataType][dataAttribute]);
+		      .y1(function (wk) {
+		      	return yScale(wk.y1);
 		      })
 
 		// set data to path
 		path
-		  .datum(weeks)
+		  .datum(weeksData)
 		  .transition()
 		  .duration(450)
 		  .attr('d', area);	
