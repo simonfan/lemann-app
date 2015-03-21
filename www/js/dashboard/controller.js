@@ -24,8 +24,13 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 			// set array of available schools
 			$scope.escolas = res.data;
 
+
 			// set control value for escolaId
-			$scope.control.escola = $stateParams.schoolId || _.first(res.data)._id
+			$scope.control.escola = $stateParams.schoolId || _.first(res.data)._id;
+			console.log($stateParams.schoolId);
+
+			console.log($scope.control.escola);
+
 		});
 
 
@@ -79,10 +84,7 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 				return e._id === control.escola;
 			});
 
-			var turmas = [{
-				_id: '_all',
-				name: 'Todas'
-			}];
+			var turmas = [$scope.turmas.shift()];
 
 			// set the turmas at scope
 			$scope.turmas = turmas.concat(escolaObj.turmas);
@@ -105,7 +107,10 @@ angular.module('dashboard.controller', ['dashboard.services', 'app.services'])
 
 	// watch changes on escola property of the control object
 	$scope.$watch('control.escola', updateGraph);
-	$scope.$watch('control.turma', updateGraph);
+	$scope.$watch('control.turma', function () {
+		updateGraph()
+
+	});
 
 	// draws all required graphs
 	function drawAllRequiredGraphs() {

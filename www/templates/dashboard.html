@@ -11,7 +11,7 @@
                     Escolha a instituição:
                 </div>
                 <select ng-model="control.escola" class="item-select">
-                    <option ng-repeat="escola in escolas" value="{{ escola._id }}">
+                    <option ng-repeat="escola in escolas" value="{{ escola._id }}" ng-selected="{{ control.escola === escola._id }}">
                     {{ escola.name }}
                     </option>
 
@@ -26,7 +26,8 @@
                     Escolha a turma:
                 </div>
                 <select ng-model="control.turma" class="item-select">
-                    <option ng-repeat="turma in turmas" value="{{ turma._id }}">
+                    <option ng-repeat="turma in turmas" value="{{ turma._id }}"
+                    ng-selected="{{ control.turma === turma._id }}">
                    	 	{{ turma.name }}
                     </option>
 
